@@ -32,23 +32,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     controller: TextEditingController(),
                     hintText: 'Email',
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(height: 8,),
                   AppTextFieldWidget(
                       hintText: 'First Name',
                       obscureText: true,
                       controller: TextEditingController()
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(height: 8,),
                   AppTextFieldWidget(
                       hintText: 'Last Name',
                       controller: TextEditingController()
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(height: 8,),
                   AppTextFieldWidget(
                       hintText: 'Mobile',
                       controller: TextEditingController()
                   ),
-                  const SizedBox(height: 16,),
+                  const SizedBox(height: 8,),
                   AppTextFieldWidget(
                       hintText: 'Password',
                       obscureText: true,
@@ -58,7 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onTap: () {},
                     child: const Icon(Icons.arrow_circle_right_outlined),
                   ),
-                  const SizedBox(height: 24,),
+                  const SizedBox(height: 8,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
