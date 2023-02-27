@@ -1,20 +1,19 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:task_manager_app/ui/screens/sign_up_screen.dart';
+import 'package:task_manager_app/ui/screens/login_screen.dart';
+
 import '../utils/text_styles.dart';
 import '../widgets/app_elevated_button.dart';
 import '../widgets/app_text_field_widget.dart';
 import '../widgets/screen_background_widget.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -27,11 +26,27 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Get Started With', style: screenTitleTextStyle,),
+                  Text('Sign Up', style: screenTitleTextStyle),
                   const SizedBox(height: 24,),
                   AppTextFieldWidget(
                     controller: TextEditingController(),
                     hintText: 'Email',
+                  ),
+                  const SizedBox(height: 16,),
+                  AppTextFieldWidget(
+                      hintText: 'First Name',
+                      obscureText: true,
+                      controller: TextEditingController()
+                  ),
+                  const SizedBox(height: 16,),
+                  AppTextFieldWidget(
+                      hintText: 'Last Name',
+                      controller: TextEditingController()
+                  ),
+                  const SizedBox(height: 16,),
+                  AppTextFieldWidget(
+                      hintText: 'Mobile',
+                      controller: TextEditingController()
                   ),
                   const SizedBox(height: 16,),
                   AppTextFieldWidget(
@@ -44,24 +59,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: const Icon(Icons.arrow_circle_right_outlined),
                   ),
                   const SizedBox(height: 24,),
-                  Center(
-                      child: TextButton(
-                        style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 0,)),
-                          onPressed: (){},
-                          child: const Text('Forgot Password?', style: TextStyle(
-                            color: Colors.grey
-                          ),))
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Don't have account?"),
+                      const Text("Have an account?"),
                       TextButton(
                           onPressed: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpScreen()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
                           },
-                          child: const Text('Sign Up', style: TextStyle(
-                              color: Colors.green,
+                          child: const Text('Sign In', style: TextStyle(
+                            color: Colors.green,
                           ),))
                     ],
                   )
@@ -74,7 +81,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
-
-
-
