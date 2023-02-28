@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:task_manager_app/ui/screens/login_screen.dart';
+import 'package:task_manager_app/ui/screens/reset_password_screen.dart';
 
 import '../utils/text_styles.dart';
 import '../widgets/app_elevated_button.dart';
@@ -20,9 +21,9 @@ class _PinVerificationState extends State<PinVerification> {
     return SafeArea(
       child: Scaffold(
         body: ScreenBackground(
-          widget: Padding(
-            padding: const EdgeInsets.all(32),
-            child: SingleChildScrollView(
+          widget: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +73,9 @@ class _PinVerificationState extends State<PinVerification> {
                   ),
                   const SizedBox(height: 24,),
                   AppElevatedButton(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ResetPasswordScreen()));
+                    },
                     child: const Text('Verify'),
                   ),
                   const SizedBox(height: 24,),

@@ -19,9 +19,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return SafeArea(
       child: Scaffold(
         body: ScreenBackground(
-          widget: Padding(
-            padding: const EdgeInsets.all(32),
-            child: SingleChildScrollView(
+          widget: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
