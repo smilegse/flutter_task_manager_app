@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/ui/screens/login_screen.dart';
-
 import '../utils/text_styles.dart';
 import '../widgets/app_elevated_button.dart';
 import '../widgets/app_text_field_widget.dart';

@@ -20,7 +20,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         body: ScreenBackground(
           widget: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: const EdgeInsets.all(32),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +31,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     style: TextStyle(
                         color: Colors.grey
                     ),),
-                  const SizedBox(height: 24,),
+                  const SizedBox(height: 8,),
                   AppTextFieldWidget(
                     controller: TextEditingController(),
                     hintText: 'Password',
@@ -40,7 +40,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     controller: TextEditingController(),
                     hintText: 'Confirm Password',
                   ),
-                  const SizedBox(height: 24,),
+                  const SizedBox(height: 8,),
                   AppElevatedButton(
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
@@ -49,7 +49,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     },
                     child: const Text('Confirm'),
                   ),
-                  const SizedBox(height: 24,),
+                  const SizedBox(height: 8,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

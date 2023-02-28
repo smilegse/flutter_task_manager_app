@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_app/ui/screens/main_bottom_navbar.dart';
 import 'package:task_manager_app/ui/screens/otp_verify_by_email_screen.dart';
 import 'package:task_manager_app/ui/screens/sign_up_screen.dart';
 import '../utils/text_styles.dart';
@@ -39,7 +40,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: TextEditingController()
                   ),
                   AppElevatedButton(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                          builder: (context) => const MainBottomNavbar()), (route) => false);
+                    },
                     child: const Icon(Icons.arrow_circle_right_outlined),
                   ),
                   const SizedBox(height: 8,),
