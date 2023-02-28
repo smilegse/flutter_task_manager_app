@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Get Started With', style: screenTitleTextStyle,),
+                  Text('Login', style: screenTitleTextStyle,),
                   const SizedBox(height: 24,),
                   AppTextFieldWidget(
                     controller: TextEditingController(),

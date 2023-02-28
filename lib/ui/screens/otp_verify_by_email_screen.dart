@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_app/ui/screens/pin_verification_screen.dart';
 import 'package:task_manager_app/ui/screens/sign_up_screen.dart';
 
 import '../utils/text_styles.dart';
@@ -39,7 +40,9 @@ class _OtpVerifyByEmailScreenState extends State<OtpVerifyByEmailScreen> {
                   ),
                   const SizedBox(height: 24,),
                   AppElevatedButton(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const PinVerification()));
+                    },
                     child: const Icon(Icons.arrow_circle_right_outlined),
                   ),
                   const SizedBox(height: 24,),
