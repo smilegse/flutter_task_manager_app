@@ -14,7 +14,7 @@ class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
-        widget: Column(
+        child: Column(
           children: [
             Expanded(
               child: ListView.builder(

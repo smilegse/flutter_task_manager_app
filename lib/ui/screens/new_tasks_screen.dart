@@ -14,7 +14,7 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
-      widget: Column(
+      child: Column(
         children: [
           Row(
             children: const [

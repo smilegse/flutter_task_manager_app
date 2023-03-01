@@ -14,7 +14,7 @@ class _ProgressTasksScreenState extends State<ProgressTasksScreen> {
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
-        widget: Column(
+        child: Column(
           children: [
             Expanded(
               child: ListView.builder(

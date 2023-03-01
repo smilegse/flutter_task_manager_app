@@ -18,7 +18,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return SafeArea(
       child: Scaffold(
         body: ScreenBackground(
-          widget: SingleChildScrollView(
+          child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(32),
               child: Column(
