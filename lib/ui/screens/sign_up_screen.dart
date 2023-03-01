@@ -4,6 +4,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/ui/screens/login_screen.dart';
 import '../../data/network_utils.dart';
+import '../../data/urls.dart';
 import '../utils/snack_bar_message.dart';
 import '../utils/text_styles.dart';
 import '../widgets/app_elevated_button.dart';
@@ -114,14 +115,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         if (_formKey.currentState!.validate()) {
                           backendProgressing = true;
                           final result = await NetworkUtils().postMethod(
-                              'https://task.teamrabbil.com/api/v1/registration',
+                              Urls.registrationUrl,
                               body: {
                                 "email": emailETController.text,
                                 "firstName": firstNamelETController.text,
                                 "lastName": lastNamelETController.text,
                                 "mobile": mobileETController.text,
                                 "password": passwordETController.text
+                              },
+                              onUnAuthorize: () {
+                                showSnackBarMessage(context, 'Username or password incorrect',true);
                               });
+
                           if (result != null && result['status'] == 'success') {
                             emailETController.clear();
                             firstNamelETController.clear();
@@ -132,7 +137,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 context, 'Registration Success!');
                           } else {
                             showSnackBarMessage(context,
-                                'Registration failed! Try again', true);
+                                'Registration failed! Try again later...', true);
                           }
                         }
                       },
