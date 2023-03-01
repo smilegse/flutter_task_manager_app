@@ -25,6 +25,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController passwordETController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  late bool backendProgressing = false;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -99,8 +101,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       obscureText: true,
                       controller: passwordETController,
                       validator: (value) {
-                        if ((value?.isEmpty ?? true) &&
-                            ((value?.length ?? 0) < 6)) {
+                        if (value?.isEmpty ?? true) {
+                          return 'Enter valid password more than 6 characters';
+                        } else if((value?.length ?? 0) < 6){
                           return 'Enter password more than 6 characters';
                         }
                         return null;
@@ -109,6 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     AppElevatedButton(
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
+                          backendProgressing = true;
                           final result = await NetworkUtils().postMethod(
                               'https://task.teamrabbil.com/api/v1/registration',
                               body: {
