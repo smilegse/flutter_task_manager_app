@@ -1,5 +1,10 @@
+import 'dart:convert';
+
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/ui/screens/login_screen.dart';
+import '../../data/network_utils.dart';
+import '../utils/snack_bar_message.dart';
 import '../utils/text_styles.dart';
 import '../widgets/app_elevated_button.dart';
 import '../widgets/app_text_field_widget.dart';
@@ -13,6 +18,13 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController emailETController = TextEditingController();
+  final TextEditingController firstNamelETController = TextEditingController();
+  final TextEditingController lastNamelETController = TextEditingController();
+  final TextEditingController mobileETController = TextEditingController();
+  final TextEditingController passwordETController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -21,57 +33,131 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(32),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Sign Up', style: screenTitleTextStyle),
-                  const SizedBox(height: 24,),
-                  AppTextFieldWidget(
-                    controller: TextEditingController(),
-                    hintText: 'Email',
-                  ),
-                  const SizedBox(height: 8,),
-                  AppTextFieldWidget(
+              child: Form(
+                key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Sign Up', style: screenTitleTextStyle),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                    AppTextFieldWidget(
+                      controller: emailETController,
+                      hintText: 'Email',
+                      validator: (value) =>
+                          EmailValidator.validate(emailETController.text)
+                              ? null
+                              : "Please enter a valid email",
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    AppTextFieldWidget(
                       hintText: 'First Name',
-                      obscureText: true,
-                      controller: TextEditingController()
-                  ),
-                  const SizedBox(height: 8,),
-                  AppTextFieldWidget(
+                      controller: firstNamelETController,
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'Enter your first name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    AppTextFieldWidget(
                       hintText: 'Last Name',
-                      controller: TextEditingController()
-                  ),
-                  const SizedBox(height: 8,),
-                  AppTextFieldWidget(
+                      controller: lastNamelETController,
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'Enter your last name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    AppTextFieldWidget(
                       hintText: 'Mobile',
-                      controller: TextEditingController()
-                  ),
-                  const SizedBox(height: 8,),
-                  AppTextFieldWidget(
+                      controller: mobileETController,
+                      validator: (value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'Enter your mobile number';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    AppTextFieldWidget(
                       hintText: 'Password',
                       obscureText: true,
-                      controller: TextEditingController()
-                  ),
-                  AppElevatedButton(
-                    onTap: () {},
-                    child: const Icon(Icons.arrow_circle_right_outlined),
-                  ),
-                  const SizedBox(height: 8,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Have an account?"),
-                      TextButton(
-                          onPressed: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-                          },
-                          child: const Text('Sign In', style: TextStyle(
-                            color: Colors.green,
-                          ),))
-                    ],
-                  )
-                ],
+                      controller: passwordETController,
+                      validator: (value) {
+                        if ((value?.isEmpty ?? true) &&
+                            ((value?.length ?? 0) < 6)) {
+                          return 'Enter password more than 6 characters';
+                        }
+                        return null;
+                      },
+                    ),
+                    AppElevatedButton(
+                      onTap: () async {
+                        if (_formKey.currentState!.validate()) {
+                          final result = await NetworkUtils().postMethod(
+                              'https://task.teamrabbil.com/api/v1/registration',
+                              body: {
+                                "email": emailETController.text,
+                                "firstName": firstNamelETController.text,
+                                "lastName": lastNamelETController.text,
+                                "mobile": mobileETController.text,
+                                "password": passwordETController.text
+                              });
+                          if (result != null && result['status'] == 'success') {
+                            emailETController.clear();
+                            firstNamelETController.clear();
+                            lastNamelETController.clear();
+                            mobileETController.clear();
+                            passwordETController.clear();
+                            showSnackBarMessage(
+                                context, 'Registration Success!');
+                          } else {
+                            showSnackBarMessage(context,
+                                'Registration failed! Try again', true);
+                          }
+                        }
+                      },
+                      child: const Icon(Icons.arrow_circle_right_outlined),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Have an account?"),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()));
+                            },
+                            child: const Text(
+                              'Sign In',
+                              style: TextStyle(
+                                color: Colors.green,
+                              ),
+                            ))
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
