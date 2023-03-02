@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_app/ui/screens/login_screen.dart';
 import 'package:task_manager_app/ui/screens/splash_screen.dart';
 
 void main(){
@@ -13,7 +12,9 @@ class TaskManagerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
         debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: SplashScreen(),
     );
   }
 }
+
+

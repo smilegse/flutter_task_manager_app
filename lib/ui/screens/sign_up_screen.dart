@@ -26,7 +26,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController passwordETController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  late bool backendProgressing = false;
+  late bool _inProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -110,10 +110,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         return null;
                       },
                     ),
-                    AppElevatedButton(
+                    if(_inProgress)
+                      const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.green,
+                        ),
+                      )
+                    else
+                      AppElevatedButton(
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
-                          backendProgressing = true;
+                          setState(() {
+                            _inProgress = true;
+                          });
                           final result = await NetworkUtils().postMethod(
                               Urls.registrationUrl,
                               body: {
@@ -126,6 +135,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               onUnAuthorize: () {
                                 showSnackBarMessage(context, 'Username or password incorrect',true);
                               });
+
+                          setState(() {
+                            _inProgress = false;
+                          });
 
                           if (result != null && result['status'] == 'success') {
                             emailETController.clear();
