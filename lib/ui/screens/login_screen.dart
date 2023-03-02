@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager_app/data/auth_utils.dart';
 import 'package:task_manager_app/data/urls.dart';
 import 'package:task_manager_app/ui/screens/main_bottom_navbar.dart';
 import 'package:task_manager_app/ui/screens/otp_verify_by_email_screen.dart';
@@ -23,11 +24,51 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordETController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  bool _inProgress = false;
+
+  Future<void> login() async{
+    setState(() {
+      _inProgress = true;
+    });
+    final result = await NetworkUtils()
+        .postMethod(Urls.loginUrl, body: {
+      "email": emailETController.text.trim(),
+      "password": passwordETController.text
+    }, onUnAuthorize: () {
+      showSnackBarMessage(context,
+          'Username or password incorrect', true);
+    });
+    setState(() {
+      _inProgress = false;
+    });
+    if (result != null && result['status'] == 'success') {
+
+      AuthUtils.saveUserLoginData(
+          result['token'],
+          result['data']['firstName'],
+          result['data']['lastName'],
+          result['data']['email'],
+          result['data']['mobile'],
+          result['data']['photo']
+      );
+
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+              MainBottomNavbar()),
+              (route) => true);
+    } else {
+      showSnackBarMessage(context,
+          'Username or password incorrect', true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: ScreenBackground(
+    return Scaffold(
+      body: SafeArea(
+        child: ScreenBackground(
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(32),
@@ -67,27 +108,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         return null;
                       },
                     ),
-                    AppElevatedButton(
-                      onTap: () async {
-                        if (_formKey.currentState!.validate()) {
-                          final result = await NetworkUtils().postMethod(
-                              Urls.loginUrl,
-                              body: {
-                                "email": emailETController.text.trim(),
-                                "password": passwordETController.text
-                              },
-                              onUnAuthorize: () {
-                                showSnackBarMessage(context, 'Username or password incorrect',true);
-                              });
-
-                          if (result != null && result['status'] == 'success') {
-                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-                              builder: (context) => const MainBottomNavbar()),(route) => false);
+                    if(_inProgress)
+                      const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.green,
+                        ),
+                      )
+                    else
+                      AppElevatedButton(
+                        onTap: () async {
+                          if (_formKey.currentState!.validate()) {
+                            login();
                           }
-                        }
-                      },
-                      child: const Icon(Icons.arrow_circle_right_outlined),
-                    ),
+                        },
+                        child: const Icon(Icons.arrow_circle_right_outlined),
+                      ),
                     const SizedBox(
                       height: 8,
                     ),
