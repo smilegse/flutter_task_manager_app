@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthUtils {
   static String? token, firstName, lastName, mobile, email, photo;
 
-  static Future<void> saveUserLoginData(
+  static Future<void> saveUserData(
       String uToken,
       String uFirstName,
       String uLastName,
@@ -40,16 +40,16 @@ class AuthUtils {
   static Future<void> getAuthData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     token = sharedPreferences.getString('token');
-    token = sharedPreferences.getString('firstName');
-    token = sharedPreferences.getString('lastName');
-    token = sharedPreferences.getString('email');
-    token = sharedPreferences.getString('mobile');
-    token = sharedPreferences.getString('photo');
+    firstName = sharedPreferences.getString('firstName');
+    lastName = sharedPreferences.getString('lastName');
+    email = sharedPreferences.getString('email');
+    mobile = sharedPreferences.getString('mobile');
+    photo = sharedPreferences.getString('photo');
   }
 
-  static Future<void> clearLoginData() async {
+  static Future<void> clearData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.clear();
+    await sharedPreferences.clear();
   }
 
 }

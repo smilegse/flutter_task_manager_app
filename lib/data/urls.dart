@@ -5,5 +5,6 @@ class Urls {
   static String loginUrl = '$baseUrl/login';
   static String registrationUrl = '$baseUrl/registration';
   static String createTaskUrl = '$baseUrl/createTask';
+  static String newTasksUrl = '$baseUrl/listTaskByStatus/New';
 
 }

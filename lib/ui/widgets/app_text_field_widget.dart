@@ -12,16 +12,15 @@ class AppTextFieldWidget extends StatelessWidget {
 
   final String hintText;
   final TextEditingController controller;
-  final bool? obscureText;
+  final bool? obscureText ;
   final int? maxLines;
   final Function(String?)? validator;
-
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      obscureText: obscureText ?? false,
+      obscureText: obscureText ?? false ,
       maxLines: maxLines ?? 1,
       validator: (value) {
         if(validator != null) {
@@ -30,12 +29,10 @@ class AppTextFieldWidget extends StatelessWidget {
         return null;
       },
       decoration: InputDecoration(
-          fillColor: Colors.white,
-          hintText: hintText,
-          filled: true,
-          border: const OutlineInputBorder(
-              borderSide: BorderSide.none
-          )
+        fillColor: Colors.white,
+        hintText: hintText,
+        filled: true,        border: const OutlineInputBorder(borderSide: BorderSide.none),
+
       ),
     );
   }

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_app/data/network_utils.dart';
+import 'package:task_manager_app/data/urls.dart';
+import 'package:task_manager_app/ui/utils/snack_bar_message.dart';
+import '../../data/models/task_model.dart';
 import '../widgets/dashboard_badge_item_widget.dart';
 import '../widgets/screen_background_widget.dart';
 import '../widgets/task_list_item_widget.dart';
@@ -11,6 +15,36 @@ class NewTasksScreen extends StatefulWidget {
 }
 
 class _NewTasksScreenState extends State<NewTasksScreen> {
+
+  TaskModel  newTaskModel = TaskModel();
+
+  bool inProgress = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    getAllNewTasks();
+  }
+  
+  Future<void> getAllNewTasks() async {
+    setState(() {
+      inProgress = true;
+    });
+
+    final response = await NetworkUtils().getMethod(Urls.newTasksUrl);
+    setState(() {
+      inProgress = false;
+    });
+
+    if(response != null){
+      newTaskModel = TaskModel.fromJson(response);
+    }else {
+      showSnackBarMessage(context, 'Unable to fetch new tasks! try again');
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
@@ -45,19 +79,27 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
             ],
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-                itemBuilder: (context, index){
-              return TaskListItemWidget(
-                chipBackgroundColor: Colors.blueAccent,
-                type: 'New',
-                subject: 'Lorem Ipsum',
-                description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
-                date: '01-03-2023',
-                onEditPress: (){},
-                onDeletePress: (){},
-              );
+            child: inProgress ? const Center(
+              child: CircularProgressIndicator(),
+            ) : RefreshIndicator(
+              onRefresh: () async{
+                await getAllNewTasks();
+              },
+              child: ListView.builder(
+                  itemCount: newTaskModel.data?.length ?? 0,
+                  reverse: false,
+                  itemBuilder: (context, index){
+                return TaskListItemWidget(
+                  chipBackgroundColor: Colors.blueAccent,
+                  type: 'New',
+                  subject: newTaskModel.data?[index].title ?? 'Unknown',
+                  description: newTaskModel.data?[index].description ?? 'Unknown',
+                  date: newTaskModel.data?[index].createdDate ?? 'Unknown',
+                  onEditPress: (){},
+                  onDeletePress: (){},
+                );
           }),
+            ),
           )
         ],
       )

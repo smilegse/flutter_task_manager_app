@@ -26,41 +26,37 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _inProgress = false;
 
-  Future<void> login() async{
+  // show the password or not
+  bool _isObscure = true;
+
+  Future<void> login() async {
     setState(() {
       _inProgress = true;
     });
-    final result = await NetworkUtils()
-        .postMethod(Urls.loginUrl, body: {
+    final result = await NetworkUtils().postMethod(Urls.loginUrl, body: {
       "email": emailETController.text.trim(),
       "password": passwordETController.text
     }, onUnAuthorize: () {
-      showSnackBarMessage(context,
-          'Username or password incorrect', true);
+      showSnackBarMessage(context, 'Username or password incorrect', true);
     });
     setState(() {
       _inProgress = false;
     });
     if (result != null && result['status'] == 'success') {
-
-      AuthUtils.saveUserLoginData(
+      AuthUtils.saveUserData(
           result['token'],
           result['data']['firstName'],
           result['data']['lastName'],
           result['data']['email'],
           result['data']['mobile'],
-          result['data']['photo']
-      );
+          result['data']['photo']);
 
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(
-              builder: (context) =>
-              MainBottomNavbar()),
-              (route) => true);
+          MaterialPageRoute(builder: (context) => MainBottomNavbar()),
+          (route) => true);
     } else {
-      showSnackBarMessage(context,
-          'Username or password incorrect', true);
+      showSnackBarMessage(context, 'Username or password incorrect', true);
     }
   }
 
@@ -97,18 +93,34 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(
                       height: 8,
                     ),
-                    AppTextFieldWidget(
-                      hintText: 'Password',
-                      obscureText: true,
+                    TextFormField(
                       controller: passwordETController,
+                      obscureText: _isObscure,
                       validator: (value) {
                         if (value?.isEmpty ?? true) {
                           return 'Enter password';
                         }
                         return null;
                       },
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        hintText: 'Password',
+                        filled: true,
+                        border: const OutlineInputBorder(
+                            borderSide: BorderSide.none),
+                        suffixIcon: IconButton(
+                          icon: Icon(_isObscure
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          },
+                        ),
+                      ),
                     ),
-                    if(_inProgress)
+                    if (_inProgress)
                       const Center(
                         child: CircularProgressIndicator(
                           color: Colors.green,
