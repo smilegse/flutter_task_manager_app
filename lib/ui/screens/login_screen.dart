@@ -52,13 +52,15 @@ class _LoginScreenState extends State<LoginScreen> {
           result['data']['photo']
       );
 
+      // ignore: use_build_context_synchronously
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
               builder: (context) =>
-              MainBottomNavbar()),
+              const MainBottomNavbar()),
               (route) => true);
     } else {
+      // ignore: use_build_context_synchronously
       showSnackBarMessage(context,
           'Username or password incorrect', true);
     }
