@@ -17,7 +17,6 @@ class NewTasksScreen extends StatefulWidget {
 
 class _NewTasksScreenState extends State<NewTasksScreen> {
   TaskModel newTaskModel = TaskModel();
-
   bool inProgress = false;
 
   @override
