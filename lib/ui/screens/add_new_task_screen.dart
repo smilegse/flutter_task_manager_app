@@ -31,7 +31,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              UserProfileWidget(),
+              const UserProfileWidget(),
               Expanded(
                 child: ScreenBackground(
                   child: Padding(
@@ -70,12 +70,12 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                             ),
                             const SizedBox(height: 16,),
                             if(_inProgress)
-                              Center(
+                              const Center(
                                 child: CircularProgressIndicator(),
                               )
                             else
                               AppElevatedButton(
-                                  child: Icon(
+                                  child: const Icon(
                                       Icons.arrow_circle_right_outlined),
                                   onTap: () async {
                                     if (_formKey.currentState!.validate()) {
@@ -127,4 +127,8 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
       ),
     );
   }
+
+
+
+
 }
