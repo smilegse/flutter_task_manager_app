@@ -33,7 +33,7 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
       inProgress = true;
     });
 
-    final response = await NetworkUtils().getMethod(Urls.newTasksUrl);
+    final response = await NetworkUtils().getMethod(Urls.newTaskUrl);
     setState(() {
       inProgress = false;
     });

@@ -5,16 +5,12 @@ void main() {
   runApp(const TaskManagerApp());
 }
 
-class TaskManagerApp extends StatefulWidget {
+class TaskManagerApp extends StatelessWidget {
   const TaskManagerApp({Key? key}) : super(key: key);
 
-  static GlobalKey<NavigatorState> globalNavigatorKey = GlobalKey<NavigatorState>();
+  static GlobalKey<NavigatorState> globalNavigatorKey =
+      GlobalKey<NavigatorState>();
 
-  @override
-  State<TaskManagerApp> createState() => _TaskManagerAppState();
-}
-
-class _TaskManagerAppState extends State<TaskManagerApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

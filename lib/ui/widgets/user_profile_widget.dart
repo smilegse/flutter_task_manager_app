@@ -4,28 +4,40 @@ import '../../data/auth_utils.dart';
 import '../screens/login_screen.dart';
 
 class UserProfileWidget extends StatelessWidget {
-   const UserProfileWidget({
+  const UserProfileWidget({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateProfileScreen()));
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => UpdateProfileScreen()));
       },
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
       leading: const CircleAvatar(child: Icon(Icons.person)),
-      trailing: IconButton(onPressed: () async {
-        await AuthUtils.clearData();
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-            builder: (context) => LoginScreen()), (route) => false);
-      }, icon: const Icon(Icons.logout, color: Colors.white)) ,
+      trailing: IconButton(
+          onPressed: () async {
+            await AuthUtils.clearData();
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+                (route) => false);
+          },
+          icon: const Icon(Icons.logout, color: Colors.white)),
       tileColor: Colors.green,
-      title: Text('${AuthUtils.firstName ?? 'Unknown'} ${AuthUtils.lastName ?? 'Unknown'}',style:
-      const TextStyle(color: Colors.white, fontWeight: FontWeight.w600 ),),
-      subtitle: Text(AuthUtils.email ?? 'Unknown',
-        style: const TextStyle(color: Colors.white,),),
+      title: Text(
+        '${AuthUtils.firstName ?? 'Unknown'} ${AuthUtils.lastName ?? 'Unknown'}',
+        style:
+            const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+      ),
+      subtitle: Text(
+        AuthUtils.email ?? 'Unknown',
+        style: const TextStyle(
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }
