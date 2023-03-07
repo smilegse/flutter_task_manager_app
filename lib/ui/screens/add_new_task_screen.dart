@@ -103,13 +103,16 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                                         subjectTEController.clear();
                                         descTEController.clear();
 
-                                        // ignore: use_build_context_synchronously
-                                        showSnackBarMessage(context,
+                                        if(mounted){
+                                          showSnackBarMessage(context,
                                             'New task added successfully');
+                                        }
                                       }else {
-                                        // ignore: use_build_context_synchronously
-                                        showSnackBarMessage(context,
-                                            'New task add failed! Try again', true);
+                                        if(mounted) {
+                                          showSnackBarMessage(context,
+                                              'New task add failed! Try again',
+                                              true);
+                                        }
                                       }
 
                                     }

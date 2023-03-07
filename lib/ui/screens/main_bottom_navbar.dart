@@ -19,8 +19,8 @@ class _MainBottomNavbarState extends State<MainBottomNavbar> {
   final List<Widget> _screens = const [
     NewTasksScreen(),
     CompletedTasksScreen(),
-    CancelledTasksScreen(),
-    ProgressTasksScreen()
+    ProgressTasksScreen(),
+    CancelledTasksScreen()
   ];
 
   @override
@@ -29,7 +29,7 @@ class _MainBottomNavbarState extends State<MainBottomNavbar> {
       body: SafeArea(
         child: Column(
           children: [
-            UserProfileWidget(),
+            const UserProfileWidget(),
             Expanded(child: _screens[_selectedScreen]),
           ],
         ),
@@ -57,8 +57,8 @@ class _MainBottomNavbarState extends State<MainBottomNavbar> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.new_label_outlined), label: 'New'),
           BottomNavigationBarItem(icon: Icon(Icons.done_outline),label: 'Completed'),
-          BottomNavigationBarItem(icon: Icon(Icons.close_outlined),label: 'Cancelled'),
-          BottomNavigationBarItem(icon: Icon(Icons.ac_unit_sharp),label: 'Progress')
+          BottomNavigationBarItem(icon: Icon(Icons.ac_unit_sharp),label: 'Progress'),
+          BottomNavigationBarItem(icon: Icon(Icons.close_outlined),label: 'Cancelled')
         ],
       ),
     );

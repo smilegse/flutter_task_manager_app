@@ -30,7 +30,7 @@ class UserProfileWidget extends StatelessWidget {
       title: Text(
         '${AuthUtils.firstName ?? 'Unknown'} ${AuthUtils.lastName ?? 'Unknown'}',
         style:
-            const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            const TextStyle(color: Colors.white),
       ),
       subtitle: Text(
         AuthUtils.email ?? 'Unknown',

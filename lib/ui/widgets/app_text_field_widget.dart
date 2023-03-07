@@ -31,7 +31,7 @@ class AppTextFieldWidget extends StatelessWidget {
       decoration: InputDecoration(
         fillColor: Colors.white,
         hintText: hintText,
-        filled: true,        border: const OutlineInputBorder(borderSide: BorderSide.none),
+        filled: true, border: const OutlineInputBorder(borderSide: BorderSide.none),
 
       ),
     );

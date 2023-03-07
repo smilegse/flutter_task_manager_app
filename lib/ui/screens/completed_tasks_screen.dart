@@ -4,6 +4,7 @@ import 'package:task_manager_app/ui/widgets/status_change_bottom_sheet.dart';
 import '../../data/models/task_model.dart';
 import '../../data/network_utils.dart';
 import '../../data/urls.dart';
+import '../utils/alert_dialog_yes_no.dart';
 import '../utils/snack_bar_message.dart';
 import '../widgets/dashboard_badge_item_widget.dart';
 import '../widgets/screen_background_widget.dart';
@@ -43,8 +44,32 @@ class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
     if(response != null){
       completedTaskModel = TaskModel.fromJson(response);
     }else {
-      // ignore: use_build_context_synchronously
-      showSnackBarMessage(context, 'Unable to fetch completed tasks! try again');
+      if(mounted) {
+        showSnackBarMessage(
+            context, 'Unable to fetch completed tasks! try again',true);
+      }
+    }
+  }
+
+  Future<void> deleteTask(String taskId) async {
+    setState(() {
+      inProgress = true;
+    });
+
+    final response = await NetworkUtils().getMethod(Urls.deleteTaskUrl(taskId));
+    setState(() {
+      inProgress = false;
+    });
+
+    if (response != null && response['status'] == 'success') {
+      await getAllCompletedTasks();
+      if(mounted) {
+        showSnackBarMessage(context, 'Task has been deleted');
+      }
+    } else {
+      if(mounted){
+        showSnackBarMessage(context, 'Delete failed! Try again',true);
+      }
     }
   }
 
@@ -73,7 +98,11 @@ class _CompletedTasksScreenState extends State<CompletedTasksScreen> {
                       getAllCompletedTasks();
                     });
                   },
-                  onDeletePress: (){},
+                  onDeletePress: (){
+                    alertDialogYesNo(context, () async {
+                      await deleteTask(completedTaskModel.data?[index].sId ?? '');
+                    });
+                  },
                 );
               }),
         )

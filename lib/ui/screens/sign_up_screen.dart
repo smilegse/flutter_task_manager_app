@@ -20,8 +20,8 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController emailETController = TextEditingController();
-  final TextEditingController firstNamelETController = TextEditingController();
-  final TextEditingController lastNamelETController = TextEditingController();
+  final TextEditingController firstNameETController = TextEditingController();
+  final TextEditingController lastNameETController = TextEditingController();
   final TextEditingController mobileETController = TextEditingController();
   final TextEditingController passwordETController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -60,7 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     AppTextFieldWidget(
                       hintText: 'First Name',
-                      controller: firstNamelETController,
+                      controller: firstNameETController,
                       validator: (value) {
                         if (value?.isEmpty ?? true) {
                           return 'Enter your first name';
@@ -73,7 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     AppTextFieldWidget(
                       hintText: 'Last Name',
-                      controller: lastNamelETController,
+                      controller: lastNameETController,
                       validator: (value) {
                         if (value?.isEmpty ?? true) {
                           return 'Enter your last name';
@@ -127,8 +127,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               Urls.registrationUrl,
                               body: {
                                 "email": emailETController.text,
-                                "firstName": firstNamelETController.text,
-                                "lastName": lastNamelETController.text,
+                                "firstName": firstNameETController.text,
+                                "lastName": lastNameETController.text,
                                 "mobile": mobileETController.text,
                                 "password": passwordETController.text
                               },
@@ -142,15 +142,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                           if (result != null && result['status'] == 'success') {
                             emailETController.clear();
-                            firstNamelETController.clear();
-                            lastNamelETController.clear();
+                            firstNameETController.clear();
+                            lastNameETController.clear();
                             mobileETController.clear();
                             passwordETController.clear();
-                            showSnackBarMessage(
-                                context, 'Registration Success!');
+                            if(mounted) {
+                              showSnackBarMessage(
+                                  context, 'Registration Success!');
+                            }
                           } else {
-                            showSnackBarMessage(context,
-                                'Registration failed! Try again later...', true);
+                            if(mounted) {
+                              showSnackBarMessage(context,
+                                  'Registration failed! Try again later...',
+                                  true);
+                            }
                           }
                         }
                       },

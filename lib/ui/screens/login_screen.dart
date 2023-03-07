@@ -42,7 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
       _inProgress = false;
     });
     if (result != null && result['status'] == 'success') {
-
       AuthUtils.saveUserData(
           result['token'],
           result['data']['firstName'],
@@ -52,17 +51,19 @@ class _LoginScreenState extends State<LoginScreen> {
           result['data']['photo']
       );
 
-      // ignore: use_build_context_synchronously
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-              const MainBottomNavbar()),
-              (route) => true);
+      if(mounted) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                const MainBottomNavbar()),
+                (route) => true);
+      }
     } else {
-      // ignore: use_build_context_synchronously
-      showSnackBarMessage(context,
-          'Username or password incorrect', true);
+      if(mounted) {
+        showSnackBarMessage(context,
+            'Username or password incorrect! Try again', true);
+      }
     }
   }
 

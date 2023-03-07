@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_app/ui/utils/alert_dialog_yes_no.dart';
 
 import '../../data/models/task_model.dart';
 import '../../data/network_utils.dart';
@@ -41,8 +42,31 @@ class _ProgressTasksScreenState extends State<ProgressTasksScreen> {
     if (response != null) {
       progressTaskModel = TaskModel.fromJson(response);
     } else {
-      // ignore: use_build_context_synchronously
-      showSnackBarMessage(context, 'Unable to fetch new tasks! try again');
+      if(mounted){
+        showSnackBarMessage(context, 'Unable to fetch new tasks! try again',true);
+      }
+    }
+  }
+
+  Future<void> deleteTask(String taskId) async {
+    setState(() {
+      inProgress = true;
+    });
+
+    final response = await NetworkUtils().getMethod(Urls.deleteTaskUrl(taskId));
+    setState(() {
+      inProgress = false;
+    });
+
+    if (response != null && response['status'] == 'success') {
+      await getAllProgressTasks();
+      if(mounted) {
+        showSnackBarMessage(context, 'Task has been deleted');
+      }
+    } else {
+      if(mounted){
+        showSnackBarMessage(context, 'Delete failed! Try again',true);
+      }
     }
   }
 
@@ -67,11 +91,15 @@ class _ProgressTasksScreenState extends State<ProgressTasksScreen> {
                   date: progressTaskModel.data?[index].createdDate ?? 'Unknown',
                   onEditPress: (){
                     showChangeTaskStatusModal(
-                        'Progress', progressTaskModel.data?[index].sId ?? '', (){
-                      getAllProgressTasks();
+                        'Progress', progressTaskModel.data?[index].sId ?? '', () async {
+                      await getAllProgressTasks();
                     });
                   },
-                  onDeletePress: (){},
+                  onDeletePress: (){
+                    alertDialogYesNo(context, () async {
+                      await deleteTask(progressTaskModel.data?[index].sId ?? '');
+                    });
+                  },
                 );
               }),
         )

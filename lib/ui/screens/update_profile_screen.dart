@@ -21,7 +21,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            UserProfileWidget(),
+            const UserProfileWidget(),
             Expanded(
               child: ScreenBackground(
                 child: Padding(

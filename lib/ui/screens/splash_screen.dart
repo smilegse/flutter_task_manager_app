@@ -29,14 +29,17 @@ class _SplashScreenState extends State<SplashScreen> {
     if (result) {
 
       await AuthUtils.getAuthData();
-
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => MainBottomNavbar()),
-          (route) => false);
+      if(mounted) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const MainBottomNavbar()),
+                (route) => false);
+      }
     }else {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => LoginScreen()));
+      if(mounted) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
+      }
     }
   }
 

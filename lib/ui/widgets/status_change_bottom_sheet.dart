@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/main.dart';
-
 import '../../data/network_utils.dart';
 import '../../data/urls.dart';
 import '../utils/snack_bar_message.dart';
@@ -37,9 +36,9 @@ showChangeTaskStatusModal(String currentStatus, String taskId, VoidCallback onTa
                         changeState(() {});
                       }),
                   RadioListTile(
-                      value: 'Cancelled',
+                      value: 'Progress',
                       title: const Text(
-                        'Cancelled',
+                        'Progress',
                       ),
                       groupValue: statusValue,
                       onChanged: (state) {
@@ -47,9 +46,9 @@ showChangeTaskStatusModal(String currentStatus, String taskId, VoidCallback onTa
                         changeState(() {});
                       }),
                   RadioListTile(
-                      value: 'Progress',
+                      value: 'Cancelled',
                       title: const Text(
-                        'Progress',
+                        'Cancelled',
                       ),
                       groupValue: statusValue,
                       onChanged: (state) {
@@ -63,11 +62,9 @@ showChangeTaskStatusModal(String currentStatus, String taskId, VoidCallback onTa
                         final response = await NetworkUtils().getMethod(Urls.changeTaskStatusUrl(taskId, statusValue));
                         if(response != null){
                           onTaskChangeCompleted();
-                          // ignore: use_build_context_synchronously
                           Navigator.pop(context);
                         }else {
-                          // ignore: use_build_context_synchronously
-                          showSnackBarMessage(context, 'Status change failed! Try again', true);
+                            showSnackBarMessage(context, 'Status change failed! Try again', true);
                         }
                       })
                   ),
