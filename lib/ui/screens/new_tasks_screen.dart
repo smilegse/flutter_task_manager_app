@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/data/network_utils.dart';
 import 'package:task_manager_app/data/urls.dart';
 import 'package:task_manager_app/ui/utils/snack_bar_message.dart';
 import '../../data/models/task_model.dart';
+import '../../data/models/task_status_count_model.dart';
 import '../utils/alert_dialog_yes_no.dart';
 import '../widgets/dashboard_badge_item_widget.dart';
 import '../widgets/screen_background_widget.dart';
@@ -18,14 +21,24 @@ class NewTasksScreen extends StatefulWidget {
 
 class _NewTasksScreenState extends State<NewTasksScreen> {
   TaskModel newTaskModel = TaskModel();
+  TaskStatusCountModel taskStatusCountModel = TaskStatusCountModel();
+
   bool inProgress = false;
+  bool inProgressStatus = false;
+
+  int newTaskCount = 0;
+  int cancelledTaskCount = 0;
+  int completedTaskCount = 0;
+  int progressTaskCount = 0;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
+    getTaskStatusCount();
     getAllNewTasks();
+
   }
 
   Future<void> getAllNewTasks() async {
@@ -69,35 +82,62 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
     }
   }
 
+  Future<void> getTaskStatusCount() async{
+    // setState(() {
+    //   inProgressStatus = true;
+    // });
+    final response = await NetworkUtils().getMethod(Urls.taskStatusCountUrl);
+    log(response);
+
+    // setState(() {
+    //   inProgressStatus = false;
+    // });
+
+    if (response != null && response['status'] == 'success') {
+      taskStatusCountModel = TaskStatusCountModel.fromJson(response);
+      log(taskStatusCountModel.data.toString());
+      newTaskCount = taskStatusCountModel.data?[0].sum as int;        // New
+      cancelledTaskCount = taskStatusCountModel.data?[1].sum as int;  // Cancelled
+      completedTaskCount = taskStatusCountModel.data?[2].sum as int;  // Completed
+      progressTaskCount = taskStatusCountModel.data?[3].sum as int;   // Progress
+    } else {
+      if(mounted){
+        showSnackBarMessage(context, 'Unable to fetch task status count data! try again',true);
+      }
+    }
+
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    return ScreenBackground(
-        child: Column(
+    return ScreenBackground(child: Column(
       children: [
         Row(
-          children: const [
+          children: [
             Expanded(
               child: DashboardBadgeItemWidget(
                 typeOfTask: 'New',
-                numberOfTasks: 23,
+                numberOfTasks: newTaskCount
               ),
             ),
             Expanded(
               child: DashboardBadgeItemWidget(
                 typeOfTask: 'Completed',
-                numberOfTasks: 30,
+                numberOfTasks: completedTaskCount
               ),
             ),
             Expanded(
               child: DashboardBadgeItemWidget(
                 typeOfTask: 'Cancelled',
-                numberOfTasks: 11,
+                numberOfTasks: cancelledTaskCount
               ),
             ),
             Expanded(
               child: DashboardBadgeItemWidget(
-                typeOfTask: 'In Progress',
-                numberOfTasks: 05,
+                typeOfTask: 'Progress',
+                numberOfTasks: progressTaskCount
               ),
             ),
           ],
