@@ -29,14 +29,14 @@ class _MainBottomNavbarState extends State<MainBottomNavbar> {
       body: SafeArea(
         child: Column(
           children: [
-            const UserProfileWidget(),
+            UserProfileWidget(),
             Expanded(child: _screens[_selectedScreen]),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddNewTaskScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddNewTaskScreen()));
         },
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),

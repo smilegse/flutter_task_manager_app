@@ -36,8 +36,8 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
     // TODO: implement initState
     super.initState();
 
-    getTaskStatusCount();
     getAllNewTasks();
+    getTaskStatusCount();
 
   }
 
@@ -83,23 +83,23 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
   }
 
   Future<void> getTaskStatusCount() async{
-    // setState(() {
-    //   inProgressStatus = true;
-    // });
+    setState(() {
+       inProgressStatus = true;
+    });
     final response = await NetworkUtils().getMethod(Urls.taskStatusCountUrl);
     log(response);
 
-    // setState(() {
-    //   inProgressStatus = false;
-    // });
+     setState(() {
+       inProgressStatus = false;
+     });
 
     if (response != null && response['status'] == 'success') {
-      taskStatusCountModel = TaskStatusCountModel.fromJson(response);
+      taskStatusCountModel = TaskStatusCountModel.fromJson(response) ;
       log(taskStatusCountModel.data.toString());
-      newTaskCount = taskStatusCountModel.data?[0].sum as int;        // New
-      cancelledTaskCount = taskStatusCountModel.data?[1].sum as int;  // Cancelled
-      completedTaskCount = taskStatusCountModel.data?[2].sum as int;  // Completed
-      progressTaskCount = taskStatusCountModel.data?[3].sum as int;   // Progress
+      newTaskCount = taskStatusCountModel.data?[0].sum ?? 0;        // New
+      cancelledTaskCount = taskStatusCountModel.data?[1].sum  ?? 0;  // Cancelled
+      completedTaskCount = taskStatusCountModel.data?[2].sum  ?? 0;  // Completed
+      progressTaskCount = taskStatusCountModel.data?[3].sum  ?? 0;   // Progress
     } else {
       if(mounted){
         showSnackBarMessage(context, 'Unable to fetch task status count data! try again',true);

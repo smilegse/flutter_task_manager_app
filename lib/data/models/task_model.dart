@@ -18,11 +18,13 @@ class TaskModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
+      data['data'] = this.data?.map((v) => v.toJson()).toList();
     }
     return data;
   }
+
 }
+
 
 class Data {
   String? sId;
