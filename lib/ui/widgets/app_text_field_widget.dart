@@ -8,12 +8,14 @@ class AppTextFieldWidget extends StatelessWidget {
     this.obscureText,
     this.maxLines,
     this.validator,
+    this.readOnly
   });
 
   final String hintText;
   final TextEditingController controller;
   final bool? obscureText ;
   final int? maxLines;
+  final bool? readOnly;
   final Function(String?)? validator;
 
   @override
@@ -22,6 +24,7 @@ class AppTextFieldWidget extends StatelessWidget {
       controller: controller,
       obscureText: obscureText ?? false ,
       maxLines: maxLines ?? 1,
+      readOnly: readOnly ?? false,
       validator: (value) {
         if(validator != null) {
           return validator!(value);
@@ -31,6 +34,7 @@ class AppTextFieldWidget extends StatelessWidget {
       decoration: InputDecoration(
         fillColor: Colors.white,
         hintText: hintText,
+        labelText: hintText,
         filled: true, border: const OutlineInputBorder(borderSide: BorderSide.none),
 
       ),

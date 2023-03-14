@@ -1,6 +1,6 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:task_manager_app/data/auth_utils.dart';
 import 'package:task_manager_app/data/network_utils.dart';
 import 'package:task_manager_app/data/urls.dart';
 import 'package:task_manager_app/ui/utils/snack_bar_message.dart';
@@ -33,11 +33,10 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
-    getAllNewTasks();
     getTaskStatusCount();
+    getAllNewTasks();
 
   }
 
@@ -46,15 +45,25 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
       inProgress = true;
     });
 
-    final response = await NetworkUtils().getMethod(Urls.newTaskUrl);
+    final response = await NetworkUtils().getMethod(
+      Urls.newTaskUrl,
+      onUnAuthorize: () {
+        log('Api calling Unauthorized!');
+        showSnackBarMessage(context,'Unauthorized!', true);
+    });
+
     setState(() {
       inProgress = false;
     });
 
-    if (response != null) {
+    //log(response.toString());
+
+    if (response != null && response['status'] == 'success') {
+      log('getAllNewTasks success');
       newTaskModel = TaskModel.fromJson(response);
     } else {
       if(mounted){
+        log('getAllNewTasks() Unable to fetch new tasks! try again');
         showSnackBarMessage(context, 'Unable to fetch new tasks! try again',true);
       }
     }
@@ -66,12 +75,14 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
     });
 
     final response = await NetworkUtils().getMethod(Urls.deleteTaskUrl(taskId));
+
     setState(() {
       inProgress = false;
     });
 
     if (response != null && response['status'] == 'success') {
       await getAllNewTasks();
+      await getTaskStatusCount();
       if(mounted) {
         showSnackBarMessage(context, 'Task has been deleted');
       }
@@ -87,21 +98,32 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
        inProgressStatus = true;
     });
     final response = await NetworkUtils().getMethod(Urls.taskStatusCountUrl);
-    log(response);
 
      setState(() {
        inProgressStatus = false;
      });
 
+    //log(response.toString());
+    //log('Token: ${AuthUtils.token}');
+
     if (response != null && response['status'] == 'success') {
-      taskStatusCountModel = TaskStatusCountModel.fromJson(response) ;
-      log(taskStatusCountModel.data.toString());
-      newTaskCount = taskStatusCountModel.data?[0].sum ?? 0;        // New
-      cancelledTaskCount = taskStatusCountModel.data?[1].sum  ?? 0;  // Cancelled
-      completedTaskCount = taskStatusCountModel.data?[2].sum  ?? 0;  // Completed
-      progressTaskCount = taskStatusCountModel.data?[3].sum  ?? 0;   // Progress
+      log('getTaskStatusCount success');
+      taskStatusCountModel = TaskStatusCountModel.fromJson(response);
+
+      for (var taskStatusCount in taskStatusCountModel.data!) {
+        if(taskStatusCount.sId == 'New'){
+          newTaskCount = taskStatusCount.sum ?? 0;        // New
+        }else if(taskStatusCount.sId == 'Completed'){
+          completedTaskCount = taskStatusCount.sum ?? 0;  // Cancelled
+        }else if (taskStatusCount.sId == 'Progress') {
+          progressTaskCount = taskStatusCount.sum ?? 0;   // Completed
+        }else {
+          cancelledTaskCount = taskStatusCount.sum ?? 0;    // Progress
+        }
+      }
     } else {
       if(mounted){
+        log('getTaskStatusCount() Unable to fetch task status count data! try again');
         showSnackBarMessage(context, 'Unable to fetch task status count data! try again',true);
       }
     }
@@ -128,16 +150,17 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
                 numberOfTasks: completedTaskCount
               ),
             ),
-            Expanded(
-              child: DashboardBadgeItemWidget(
-                typeOfTask: 'Cancelled',
-                numberOfTasks: cancelledTaskCount
-              ),
-            ),
+
             Expanded(
               child: DashboardBadgeItemWidget(
                 typeOfTask: 'Progress',
                 numberOfTasks: progressTaskCount
+              ),
+            ),
+            Expanded(
+              child: DashboardBadgeItemWidget(
+                  typeOfTask: 'Cancelled',
+                  numberOfTasks: cancelledTaskCount
               ),
             ),
           ],
@@ -150,6 +173,7 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
               : RefreshIndicator(
                   onRefresh: () async {
                     await getAllNewTasks();
+                    await getTaskStatusCount();
                   },
                   child: ListView.builder(
                       itemCount: newTaskModel.data?.length ?? 0,

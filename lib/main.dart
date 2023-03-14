@@ -14,6 +14,7 @@ class TaskManagerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Task Manager',
       debugShowCheckedModeBanner: false,
       navigatorKey: TaskManagerApp.globalNavigatorKey,
       home: const SplashScreen(),

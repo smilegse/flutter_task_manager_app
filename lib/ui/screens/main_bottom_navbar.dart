@@ -4,7 +4,7 @@ import 'package:task_manager_app/ui/screens/completed_tasks_screen.dart';
 import 'package:task_manager_app/ui/screens/new_tasks_screen.dart';
 import 'package:task_manager_app/ui/screens/progress_tasks_screen.dart';
 import '../widgets/user_profile_widget.dart';
-import 'add_new_task_screen.dart';
+import 'package:task_manager_app/ui/screens/add_new_task_screen.dart';
 
 class MainBottomNavbar extends StatefulWidget {
   const MainBottomNavbar({Key? key}) : super(key: key);
@@ -36,7 +36,7 @@ class _MainBottomNavbarState extends State<MainBottomNavbar> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddNewTaskScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddNewTaskScreen()));
         },
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),

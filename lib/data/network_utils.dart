@@ -14,13 +14,13 @@ class NetworkUtils {
           headers: {"Content-Type": "application/json", 'token': AuthUtils.token ?? ''}
       );
 
-      log(response.body);
+      //log(response.body);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else if (response.statusCode == 401) {
         if (onUnAuthorize != null) {
-          onUnAuthorize();
+          onUnAuthorize;
         } else {
           moveToLogin();
         }
@@ -35,14 +35,13 @@ class NetworkUtils {
   ///Post request
   Future<dynamic> postMethod(String url,
       {Map<String, dynamic>? body,
-      VoidCallback? onUnAuthorize,
-      String? token}) async {
+      VoidCallback? onUnAuthorize}) async {
     try {
       final http.Response response = await http.post(Uri.parse(url),
           headers: {"Content-Type": "application/json", 'token': AuthUtils.token ?? ''},
           body: jsonEncode(body));
 
-      log(response.body);
+      //log(response.body);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);

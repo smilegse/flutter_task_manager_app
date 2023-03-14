@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/data/auth_utils.dart';
@@ -20,28 +22,36 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
   final TextEditingController emailETController = TextEditingController();
   final TextEditingController passwordETController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _inProgress = false;
+  bool _isObscure = true;
 
   Future<void> login() async{
-    setState(() {
-      _inProgress = true;
-    });
+    _inProgress = true;
+    setState(() {});
+
+    //log('Token before login: ${AuthUtils.token}');
+
     final result = await NetworkUtils()
         .postMethod(Urls.loginUrl, body: {
-      "email": emailETController.text.trim(),
-      "password": passwordETController.text
-    }, onUnAuthorize: () {
-      showSnackBarMessage(context,
-          'Username or password incorrect', true);
-    });
-    setState(() {
-      _inProgress = false;
-    });
+          "email": emailETController.text.trim(),
+          "password": passwordETController.text
+        }, onUnAuthorize: () {
+          showSnackBarMessage(context,'Username or password incorrect', true);
+        }
+      );
+
+    _inProgress = false;
+    setState(() {});
+
+    //log(result.toString());
+
     if (result != null && result['status'] == 'success') {
+      //log('login success and saved user data');
       AuthUtils.saveUserData(
           result['token'],
           result['data']['firstName'],
@@ -57,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
             MaterialPageRoute(
                 builder: (context) =>
                 const MainBottomNavbar()),
-                (route) => true);
+                (route) => false);
       }
     } else {
       if(mounted) {
@@ -77,7 +87,6 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.all(32),
               child: Form(
                 key: _formKey,
-                //autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,9 +109,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(
                       height: 8,
                     ),
-                    AppTextFieldWidget(
-                      hintText: 'Password',
-                      obscureText: true,
+                    // AppTextFieldWidget(
+                    //   hintText: 'Password',
+                    //   obscureText: true,
+                    //   controller: passwordETController,
+                    //   validator: (value) {
+                    //     if (value?.isEmpty ?? true) {
+                    //       return 'Enter password';
+                    //     }
+                    //     return null;
+                    //   },
+                    // ),
+                    TextFormField(
+                      obscureText: _isObscure,
                       controller: passwordETController,
                       validator: (value) {
                         if (value?.isEmpty ?? true) {
@@ -110,6 +129,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                         return null;
                       },
+                      decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          hintText: 'Password',
+                          filled: true, border: const OutlineInputBorder(borderSide: BorderSide.none),
+                          labelText: 'Password',
+                          // this button is used to toggle the password visibility
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                  _isObscure ? Icons.visibility : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              })),
                     ),
                     if(_inProgress)
                       const Center(
@@ -121,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       AppElevatedButton(
                         onTap: () async {
                           if (_formKey.currentState!.validate()) {
-                            login();
+                            await login();
                           }
                         },
                         child: const Icon(Icons.arrow_circle_right_outlined),
