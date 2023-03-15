@@ -13,7 +13,7 @@ class UserProfileWidget extends StatelessWidget {
     return ListTile(
       onTap: () {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const UpdateProfileScreen()));
+            MaterialPageRoute(builder: (context) => UpdateProfileScreen()));
       },
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
       leading: const CircleAvatar(child: Icon(Icons.person)),

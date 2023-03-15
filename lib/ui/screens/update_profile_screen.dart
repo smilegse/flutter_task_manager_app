@@ -48,25 +48,36 @@ String? base64Image;
 
 
   void updateProfile() async{
-
     if(pickedImage != null) {
       List<int> imageBytes = await pickedImage!.readAsBytes();
-      log(imageBytes.toString());
+      //log(imageBytes.toString());
       base64Image = base64Encode(imageBytes);
     }
 
-    final result =await NetworkUtils().postMethod(Urls.profileUpdateUrl, body: {
+    Map<String,String> bodyParams = {
+      "firstName": _firstNameTEController.text.trim(),
+      "lastName": _lastNameTEController.text.trim(),
       "mobile": _mobileTEController.text.trim(),
-      "photo": base64Image
-    });
+    };
+
+    if(_passwordTEController.text.isNotEmpty){
+      bodyParams['password'] = _passwordTEController.text;
+    }
+
+    if(pickedImage != null){
+      bodyParams['photo'] = base64Image ?? '';
+    }
+
+    final result = await NetworkUtils().postMethod(Urls.profileUpdateUrl, body: bodyParams );
 
     if(result != null && result['status'] == 'success'){
+
       AuthUtils.saveUserData(
         AuthUtils.token ?? '',
-        AuthUtils.firstName ?? '',
-        AuthUtils.lastName ?? '',
-        AuthUtils.email ?? '',
-        _mobileTEController.text.trim(),
+        _firstNameTEController.text.trim() ?? '',
+        _lastNameTEController.text.trim() ?? '',
+        _emailTEController.text.trim() ?? '',
+        _mobileTEController.text.trim() ?? '',
         AuthUtils.photo ?? '',
       );
 

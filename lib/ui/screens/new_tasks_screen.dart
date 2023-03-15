@@ -48,7 +48,7 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
     final response = await NetworkUtils().getMethod(
       Urls.newTaskUrl,
       onUnAuthorize: () {
-        log('Api calling Unauthorized!');
+        //log('Api calling Unauthorized!');
         showSnackBarMessage(context,'Unauthorized!', true);
     });
 
@@ -59,11 +59,11 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
     //log(response.toString());
 
     if (response != null && response['status'] == 'success') {
-      log('getAllNewTasks success');
+      //log('getAllNewTasks success');
       newTaskModel = TaskModel.fromJson(response);
     } else {
       if(mounted){
-        log('getAllNewTasks() Unable to fetch new tasks! try again');
+        //log('getAllNewTasks() Unable to fetch new tasks! try again');
         showSnackBarMessage(context, 'Unable to fetch new tasks! try again',true);
       }
     }
@@ -191,6 +191,7 @@ class _NewTasksScreenState extends State<NewTasksScreen> {
                             showChangeTaskStatusModal(
                               'New', newTaskModel.data?[index].sId ?? '', (){
                               getAllNewTasks();
+                              getTaskStatusCount();
                             });
                           },
                           onDeletePress: () async {

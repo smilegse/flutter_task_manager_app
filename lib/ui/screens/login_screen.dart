@@ -34,10 +34,10 @@ class _LoginScreenState extends State<LoginScreen> {
     _inProgress = true;
     setState(() {});
 
-    //log('Token before login: ${AuthUtils.token}');
+    log('Token before login: ${AuthUtils.token}');
 
-    final result = await NetworkUtils()
-        .postMethod(Urls.loginUrl, body: {
+    final result = await NetworkUtils().postMethod(Urls.loginUrl,
+        body: {
           "email": emailETController.text.trim(),
           "password": passwordETController.text
         }, onUnAuthorize: () {
@@ -48,17 +48,17 @@ class _LoginScreenState extends State<LoginScreen> {
     _inProgress = false;
     setState(() {});
 
-    //log(result.toString());
+    log(result.toString());
 
     if (result != null && result['status'] == 'success') {
-      //log('login success and saved user data');
+      log('login success and saved user data');
       AuthUtils.saveUserData(
-          result['token'],
-          result['data']['firstName'],
-          result['data']['lastName'],
-          result['data']['email'],
-          result['data']['mobile'],
-          result['data']['photo']
+          result['token'] ?? '',
+          result['data']['firstName'] ?? '',
+          result['data']['lastName'] ?? '',
+          result['data']['email'] ?? '',
+          result['data']['mobile'] ?? '',
+          result['data']['photo'] ?? ''
       );
 
       if(mounted) {
@@ -109,17 +109,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(
                       height: 8,
                     ),
-                    // AppTextFieldWidget(
-                    //   hintText: 'Password',
-                    //   obscureText: true,
-                    //   controller: passwordETController,
-                    //   validator: (value) {
-                    //     if (value?.isEmpty ?? true) {
-                    //       return 'Enter password';
-                    //     }
-                    //     return null;
-                    //   },
-                    // ),
                     TextFormField(
                       obscureText: _isObscure,
                       controller: passwordETController,
