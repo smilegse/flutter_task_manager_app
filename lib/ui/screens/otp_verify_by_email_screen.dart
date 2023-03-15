@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/data/network_utils.dart';
 import 'package:task_manager_app/data/urls.dart';
-import 'package:task_manager_app/ui/screens/pin_verification_screen.dart';
+import 'package:task_manager_app/ui/screens/otp_verification_screen.dart';
 import 'package:task_manager_app/ui/screens/sign_up_screen.dart';
 
 import '../utils/snack_bar_message.dart';
@@ -49,7 +49,7 @@ class _OtpVerifyByEmailScreenState extends State<OtpVerifyByEmailScreen> {
                       hintText: 'Email',
                       validator: (value) {
                         if (value?.isEmpty ?? true) {
-                          return 'Enter your task subject';
+                          return 'Enter your email';
                         }
                         return null;
                       },
@@ -66,19 +66,25 @@ class _OtpVerifyByEmailScreenState extends State<OtpVerifyByEmailScreen> {
 
                           _inProgress = true;
                           setState(() {});
-                          final response = await NetworkUtils().getMethod(Urls.recoverVerifyEmail(_emailTEController.text));
+                          final response = await NetworkUtils().getMethod(Urls.recoverVerifyEmailUrl(_emailTEController.text.trim()));
                           _inProgress = false;
                           setState(() {});
 
                           if(response != null && response['status'] == 'success'){
                             if(mounted) {
+                              showSnackBarMessage(context, 'Otp sent to the email address');
                               Navigator.push(context,MaterialPageRoute(
-                                  builder: (context) => const PinVerification()));
+                                  builder: (context) => OtpVerificationScreen(email: _emailTEController.text.trim())));
+                            }
+                          }else if(response != null && response['status'] == 'fail'){
+                            if(mounted) {
+                              showSnackBarMessage(
+                                  context, 'No user found', true);
                             }
                           }
                           else{
                             if(mounted) {
-                              showSnackBarMessage(context, 'Otp send failed! Try again', true);
+                              showSnackBarMessage(context, 'Otp send failed! Please try again', true);
                             }
                           }
                         }

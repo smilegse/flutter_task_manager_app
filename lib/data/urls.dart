@@ -17,7 +17,11 @@ class Urls {
   static String changeTaskStatusUrl(String taskId, String status) =>
       '$baseUrl/updateTaskStatus/$taskId/$status';
 
-  static String recoverVerifyEmail(String email) => '$baseUrl/RecoverVerifyEmail/$email';
+  static String recoverVerifyEmailUrl(String email) => '$baseUrl/RecoverVerifyEmail/$email';
+  static String recoverVerifyOtpUrl(String email, String otp) => '$baseUrl/RecoverVerifyOTP/$email/$otp';
+  static String recoverResetPassUrl = '$baseUrl/RecoverResetPass';
+
+
 
 
 }
