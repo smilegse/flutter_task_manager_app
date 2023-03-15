@@ -98,6 +98,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             if (response != null &&
                                 response['status'] == 'success') {
                               if (mounted) {
+                                showSnackBarMessage(
+                                    context, 'Password reset done!');
+
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
