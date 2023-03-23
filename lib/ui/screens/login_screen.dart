@@ -48,11 +48,11 @@ class _LoginScreenState extends State<LoginScreen> {
     _inProgress = false;
     setState(() {});
 
-    log(result.toString());
+    //log(result.toString());
 
     if (result != null && result['status'] == 'success') {
       log('login success and saved user data');
-      AuthUtils.saveUserData(
+      await AuthUtils.saveUserData(
           result['token'] ?? '',
           result['data']['firstName'] ?? '',
           result['data']['lastName'] ?? '',
@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                const MainBottomNavbar()),
+                MainBottomNavbar()),
                 (route) => false);
       }
     } else {
