@@ -6,6 +6,8 @@ import 'package:task_manager_app/ui/screens/progress_tasks_screen.dart';
 import '../widgets/user_profile_widget.dart';
 import 'package:task_manager_app/ui/screens/add_new_task_screen.dart';
 
+import 'get_villa_screen.dart';
+
 class MainBottomNavbar extends StatefulWidget {
   const MainBottomNavbar({Key? key}) : super(key: key);
 
@@ -21,6 +23,7 @@ class _MainBottomNavbarState extends State<MainBottomNavbar> {
     CompletedTasksScreen(),
     ProgressTasksScreen(),
     CancelledTasksScreen()
+    //GetVillaScreen()
   ];
 
   @override
@@ -29,7 +32,7 @@ class _MainBottomNavbarState extends State<MainBottomNavbar> {
       body: SafeArea(
         child: Column(
           children: [
-            UserProfileWidget(),
+            const UserProfileWidget(),
             Expanded(child: _screens[_selectedScreen]),
           ],
         ),
@@ -58,7 +61,7 @@ class _MainBottomNavbarState extends State<MainBottomNavbar> {
           BottomNavigationBarItem(icon: Icon(Icons.new_label_outlined), label: 'New'),
           BottomNavigationBarItem(icon: Icon(Icons.done_outline),label: 'Completed'),
           BottomNavigationBarItem(icon: Icon(Icons.ac_unit_sharp),label: 'Progress'),
-          BottomNavigationBarItem(icon: Icon(Icons.close_outlined),label: 'Cancelled')
+          BottomNavigationBarItem(icon: Icon(Icons.close_outlined),label: 'Cancel')
         ],
       ),
     );

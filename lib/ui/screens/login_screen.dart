@@ -2,17 +2,15 @@ import 'dart:developer';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager_app/data/auth_utils.dart';
-import 'package:task_manager_app/data/urls.dart';
+import 'package:task_manager_app/ui/getx_controllers/auth_controller.dart';
 import 'package:task_manager_app/ui/screens/main_bottom_navbar.dart';
 import 'package:task_manager_app/ui/screens/otp_verify_by_email_screen.dart';
 import 'package:task_manager_app/ui/screens/sign_up_screen.dart';
-import 'package:task_manager_app/ui/utils/snack_bar_message.dart';
-import '../../data/network_utils.dart';
 import '../utils/text_styles.dart';
 import '../widgets/app_elevated_button.dart';
 import '../widgets/app_text_field_widget.dart';
 import '../widgets/screen_background_widget.dart';
+import 'package:get/get.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -23,59 +21,11 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
-  final TextEditingController emailETController = TextEditingController();
-  final TextEditingController passwordETController = TextEditingController();
+  final TextEditingController _emailETController = TextEditingController();
+  final TextEditingController _passwordETController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  bool _inProgress = false;
   bool _isObscure = true;
-
-  Future<void> login() async{
-    _inProgress = true;
-    setState(() {});
-
-    log('Token before login: ${AuthUtils.token}');
-
-    final result = await NetworkUtils().postMethod(Urls.loginUrl,
-        body: {
-          "email": emailETController.text.trim(),
-          "password": passwordETController.text
-        }, onUnAuthorize: () {
-          showSnackBarMessage(context,'Username or password incorrect', true);
-        }
-      );
-
-    _inProgress = false;
-    setState(() {});
-
-    //log(result.toString());
-
-    if (result != null && result['status'] == 'success') {
-      log('login success and saved user data');
-      await AuthUtils.saveUserData(
-          result['token'] ?? '',
-          result['data']['firstName'] ?? '',
-          result['data']['lastName'] ?? '',
-          result['data']['email'] ?? '',
-          result['data']['mobile'] ?? '',
-          result['data']['photo'] ?? ''
-      );
-
-      if(mounted) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                MainBottomNavbar()),
-                (route) => false);
-      }
-    } else {
-      if(mounted) {
-        showSnackBarMessage(context,
-            'Username or password incorrect! Try again', true);
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,10 +49,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 24,
                     ),
                     AppTextFieldWidget(
-                      controller: emailETController,
+                      controller: _emailETController,
                       hintText: 'Email',
                       validator: (value) =>
-                          EmailValidator.validate(emailETController.text)
+                          EmailValidator.validate(_emailETController.text)
                               ? null
                               : "Please enter a valid email",
                     ),
@@ -111,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     TextFormField(
                       obscureText: _isObscure,
-                      controller: passwordETController,
+                      controller: _passwordETController,
                       validator: (value) {
                         if (value?.isEmpty ?? true) {
                           return 'Enter password';
@@ -133,21 +83,32 @@ class _LoginScreenState extends State<LoginScreen> {
                                 });
                               })),
                     ),
-                    if(_inProgress)
-                      const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.green,
-                        ),
-                      )
-                    else
-                      AppElevatedButton(
-                        onTap: () async {
-                          if (_formKey.currentState!.validate()) {
-                            await login();
-                          }
-                        },
-                        child: const Icon(Icons.arrow_circle_right_outlined),
-                      ),
+                    GetBuilder<AuthController>(builder: (authController){
+                      if(authController.loginInProgress) {
+                        return const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.green,
+                          ),
+                        );
+                      }
+                      return AppElevatedButton(
+                          onTap: () async {
+                            if (_formKey.currentState!.validate()) {
+                              final bool result = await authController.login(
+                                _emailETController.text.trim(),
+                                _passwordETController.text
+                              );
+                              if(result){
+                                Get.offAll(() => const MainBottomNavbar());
+                              }else {
+                                Get.showSnackbar(const GetSnackBar(title: 'Login failed! Try again.', ));
+                              }
+                            }
+                          },
+                          child: const Icon(Icons.arrow_circle_right_outlined),
+                        );
+                    }),
+
                     const SizedBox(
                       height: 8,
                     ),
@@ -158,11 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               vertical: 0,
                             )),
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const OtpVerifyByEmailScreen()));
+                              Get.to(const OtpVerifyByEmailScreen());
                             },
                             child: const Text(
                               'Forgot Password?',
@@ -174,11 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const Text("Don't have account?"),
                         TextButton(
                             onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SignUpScreen()));
+                              Get.to(const SignUpScreen());
                             },
                             child: const Text(
                               'Sign Up',

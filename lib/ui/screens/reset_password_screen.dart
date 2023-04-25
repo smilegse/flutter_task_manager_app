@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager_app/data/network_utils.dart';
 import 'package:task_manager_app/data/urls.dart';
 import 'package:task_manager_app/ui/screens/login_screen.dart';
@@ -98,26 +99,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                             if (response != null &&
                                 response['status'] == 'success') {
                               if (mounted) {
-                                showSnackBarMessage(
-                                    context, 'Password reset done!');
-
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginScreen()),
-                                    (route) => false);
+                                Get.showSnackbar(const GetSnackBar(title: 'Password reset done!'));
+                                Get.offAll(const LoginScreen());
                               }
                             } else if (response != null &&
                                 response['status'] == 'fail') {
                               if (mounted) {
-                                showSnackBarMessage(
-                                    context, 'Invalid Request!', true);
+                                Get.showSnackbar(const GetSnackBar(title: 'Invalid Request!', backgroundColor: Colors.red));
                               }
                             } else {
                               if (mounted) {
-                                showSnackBarMessage(
-                                    context, 'There is something wrong!', true);
+                                Get.showSnackbar(const GetSnackBar(title: 'There is something wrong!', backgroundColor: Colors.red));
                               }
                             }
                           }
@@ -136,12 +128,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         ),
                         TextButton(
                             onPressed: () {
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const LoginScreen()),
-                                  (route) => false);
+                              Get.offAll(const LoginScreen());
                             },
                             child: const Text(
                               'Sign In',

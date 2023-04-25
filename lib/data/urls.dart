@@ -1,5 +1,6 @@
 class Urls {
   static String baseUrl = 'https://task.teamrabbil.com/api/v1';
+  static String baseMyUrl = 'http://172.16.10.81:81/api';
 
   static String loginUrl = '$baseUrl/login';
   static String registrationUrl = '$baseUrl/registration';
@@ -20,6 +21,8 @@ class Urls {
   static String recoverVerifyEmailUrl(String email) => '$baseUrl/RecoverVerifyEmail/$email';
   static String recoverVerifyOtpUrl(String email, String otp) => '$baseUrl/RecoverVerifyOTP/$email/$otp';
   static String recoverResetPassUrl = '$baseUrl/RecoverResetPass';
+
+  static String getAllVillas = '$baseMyUrl/VillaApi';
 
 
 
